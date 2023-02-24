@@ -9,3 +9,4 @@ media/
 db.sqlite3
 .env
 settings.ini
+*.log

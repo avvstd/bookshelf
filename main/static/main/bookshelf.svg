@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="300"
+   height="300"
+   viewBox="0 0 300 300"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="рисунок.svg"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#222222"
+     borderopacity="0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="1.8950462"
+     inkscape:cx="105.01063"
+     inkscape:cy="175.45747"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="7.9153744"
+       y="8.443066"
+       width="410.54408"
+       height="546.16083"
+       id="rect3708" />
+    <rect
+       x="13.192291"
+       y="11.081524"
+       width="270.17811"
+       height="279.14887"
+       id="rect3694" />
+  </defs>
+  <g
+     inkscape:label="Слой 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       id="text3692"
+       style="font-size:480px;white-space:pre;shape-inside:url(#rect3694);fill:#1a1a1a"><tspan
+         x="13.191406"
+         y="728.14902"
+         id="tspan5824"><tspan
+           style="font-size:8px"
+           id="tspan5822">B</tspan></tspan></text>
+    <rect
+       style="fill:#1a1a1a;stroke-width:1.11144"
+       id="rect5601"
+       width="299.20111"
+       height="299.72882"
+       x="-0.52769071"
+       y="0"
+       rx="0"
+       ry="0" />
+    <rect
+       style="fill:#4d4d4d"
+       id="rect5754"
+       width="277.5658"
+       height="278.62119"
+       x="11.081524"
+       y="11.081524" />
+    <text
+       xml:space="preserve"
+       id="text3706"
+       style="font-size:400px;white-space:pre;shape-inside:url(#rect3708);shape-padding:12.6646;fill:#1a1a1a"
+       transform="matrix(1.0281191,0,0,0.90479982,-11.126578,-74.064208)"><tspan
+         x="20.580078"
+         y="386.03955"
+         id="tspan5828"><tspan
+           style="font-family:Georgia;-inkscape-font-specification:Georgia"
+           id="tspan5826">B</tspan></tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,75 @@
+{% extends "layout/basic.html" %}
+{% load static %}
+{% block title %}Вход{% endblock %}
+{% block head %}<link rel="stylesheet" type="text/css" href="{% static 'main/signin.css' %}">{% endblock %}
+{% block header %}
+<div class="inner">
+    <h3 class="masthead-brand">Bookshelf</h3>
+    <nav class="nav nav-masthead justify-content-center">
+        <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
+        <a class="nav-link active" href="{% url 'main:login' %}">Вход</a>
+        <a class="nav-link" href="#">Регистрация</a>
+    </nav>
+</div>
+{% endblock %}
+{% block main %}
+
+    <!--
+    {% if user.is_authenticated %}
+    <h1 class="h5 mb-3 font-weight-normal">Вы уже авторизованы.</h1>
+    {% else %}
+    <form class="form-signin" method="post">
+        {% csrf_token %}
+        <img class="mb-4" src="{% static 'main/bookshelf.svg' %}" alt="" width="72" height="72">
+        <h1 class="h5 mb-3 font-weight-normal">Войдите на сайт, чтобы редактировать свои полки.</h1>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <div class="checkbox mb-3">
+            <label>
+            <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="btn btn-lg btn-secondary btn-block" type="submit">Войти</button>
+    </form>
+    {% endif %}
+
+    <hr style="background-color: red;">
+    <hr style="background-color: aqua;">
+    -->
+
+    {% if user.is_authenticated %}
+    <h1 class="h5 mb-3 font-weight-normal">Вы уже авторизованы.</h1>
+    {% else %}
+    <form class="form-signin" method="post">
+        {% csrf_token %}
+        <img class="mb-4" src="{% static 'main/bookshelf.svg' %}" alt="" width="72" height="72">
+        <h1 class="h5 mb-3 font-weight-normal">Войдите на сайт, чтобы редактировать свои полки.</h1>
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+            <p class="non_field_errors">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+
+        {% for field in form %}           
+
+            {% if field.name == 'remember_me' %}
+                <div class="checkbox mb-3">
+                    <label>
+                        {{ field }} Запомнить меня
+                    </label>
+                </div>
+            {% else %}
+                <label for="{{ field.id_for_label }}" class="sr-only">{{ field.label }}</label>
+                {{ field }}
+                {{ field.errors }}
+            {% endif %}
+
+        {% endfor %}
+        <button class="btn btn-lg btn-secondary btn-block" type="submit">Войти</button>
+    </form>
+
+    {% endif %}
+
+{% endblock %}
