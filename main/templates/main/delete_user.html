@@ -1,0 +1,23 @@
+{% extends "layout/basic.html" %}
+{% load static %}
+{% load bootstrap4 %}
+{% block title %}Удаление пользователя{% endblock %}
+{% block header %}
+<header class="masthead mb-auto">
+    <div class="inner">
+        <h3 class="masthead-brand">Bookshelf</h3>
+        <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
+            <a class="nav-link" href="{% url 'main:profile' %}">Профиль</a>
+            <a class="nav-link" href="{% url 'main:logout' %}">Выход</a>
+        </nav>
+    </div>
+</header>
+{% endblock %}
+{% block main %}
+    <p class="lead">Удаление пользователя {{ user.username }}.</p>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_button "Удалить" button_type="submit" button_class="btn btn-lg btn-secondary mt-2" %}
+    </form>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "layout/basic.html" %}
+{% load static %}
+{% block title %}Регистрация{% endblock %}
+{% block head %}<link rel="stylesheet" type="text/css" href="{% static 'main/css/register.css' %}">{% endblock %}
+{% block header %}
+<header class="masthead mb-auto">
+    <div class="inner">
+        <h3 class="masthead-brand">Bookshelf</h3>
+        <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
+            <a class="nav-link" href="{% url 'main:login' %}">Вход</a>
+            <a class="nav-link active" href="{% url 'main:register' %}">Регистрация</a>
+        </nav>
+    </div>
+</header>
+{% endblock %}
+{% block main %}
+    <form class="form-register" method="post">
+        {% csrf_token %}
+        <h1 class="h5 mb-3 font-weight-normal">Заполните поля для регистрации нового пользователя.</h1>
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+            <p class="errors">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+
+        {% for field in form %}           
+        <div class="mt-1">
+            <label for="{{ field.id_for_label }}" class="sr-only">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                <p class="errors mt-1">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button class="btn btn-lg btn-secondary mt-2" type="submit">Зарегистрировать</button>
+    </form>
+
+{% endblock %}

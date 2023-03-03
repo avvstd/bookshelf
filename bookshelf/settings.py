@@ -30,6 +30,8 @@ INSTALLED_APPS = [
 
     #3-rd party
     'bootstrap4',
+    'django_cleanup',
+    'easy_thumbnails',
 
     #local
     'main.apps.MainConfig',
@@ -113,6 +115,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_URL = '/media/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -151,3 +156,20 @@ LOGGING = {
 SESSION_COOKIE_AGE = 60 * 60 * 24
 
 LOGIN_URL = 'main:login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+
+EMAIL_FILE_PATH = BASE_DIR / 'email'
+
+AUTH_USER_MODEL = 'main.BookUser'
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'default': {
+            'size': (125, 0),
+            'crop': 'scale',
+        }
+    }
+}
+
+THUMBNAIL_BASEDIR = 'thumbnails'

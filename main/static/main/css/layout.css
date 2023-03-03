@@ -1,36 +1,9 @@
-/*
- * Globals
- */
-
-/* Links */
-a,
-a:focus,
-a:hover {
-  color: #fff;
-}
-
-/* Custom default button */
-.btn-secondary,
-.btn-secondary:hover,
-.btn-secondary:focus {
-  color: #333;
-  text-shadow: none; /* Prevent inheritance from `body` */
-  background-color: #fff;
-  border: .05rem solid #fff;
-}
-
-
-/*
- * Base structure
- */
-
-html,
-body {
+html, body {
   height: 100%;
-  background-color: #333;
 }
 
 body {
+  background-color: #333;
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
@@ -42,14 +15,21 @@ body {
   box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 }
 
-.cover-container {
-  max-width: 42em;
+a,
+a:focus,
+a:hover {
+  color: #fff;
 }
 
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus {
+  color: #333;
+  text-shadow: none; /* Prevent inheritance from `body` */
+  background-color: #fff;
+  border: .05rem solid #fff;
+}
 
-/*
- * Header
- */
 .masthead {
   margin-bottom: 2rem;
 }
@@ -90,10 +70,6 @@ body {
   }
 }
 
-
-/*
- * Cover
- */
 .cover {
   padding: 0 1.5rem;
 }
@@ -102,10 +78,43 @@ body {
   font-weight: 700;
 }
 
-
-/*
- * Footer
- */
 .mastfoot {
   color: rgba(255, 255, 255, .5);
+}
+
+.userpic-cell {
+  max-width: 128px;
+  max-height: 128px;
+}
+
+.form-book {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+form .form-control:focus {
+  box-shadow: 0 0 0 0.2rem rgba(211, 211, 211, 0.25);
+  z-index: 2;
+}
+
+.errors {
+  color: rgb(255, 90, 90);
+  border-width: 2px;
+  border-style: solid;
+  border-color: #777;
+  border-radius: 4px;
+  padding: 0.5em;
+}
+
+.form-book .checkbox {
+  font-weight: 400;
+}
+
+.form-book .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  font-size: 16px;
+  border-color: gray;
 }
