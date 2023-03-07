@@ -1,34 +1,30 @@
+<!--v2-->
 {% extends "layout/basic.html" %}
 {% load thumbnail %}
 {% load static %}
 {% load bootstrap4 %}
 {% block title %}Редактирование профиля{% endblock %}
-{% block header %}
-<header class="masthead">
-    <div class="inner">
-        <h3 class="masthead-brand">Bookshelf</h3>
-        <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
-            <a class="nav-link" href="{% url 'main:profile' %}">Профиль</a>
-            <a class="nav-link" href="{% url 'main:logout' %}">Выход</a>
-        </nav>
-    </div>
-</header>
+{% block nav_items %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:profile' %}">Профиль</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:logout' %}">Выход</a>
+    </li>
 {% endblock %}
+{% block main_class %}mt-auto mb-auto{% endblock %}
 {% block main %}
-    <div class="container flex-wrap">
-        <div class="row">
-            <div class="col-auto text-left">
-                <h1>&commat;{{ user.username }}</h1>
-            </div>
-        </div>
-    </div>
-
+    <h3>&commat;{{ user.username }}</h3>
     <p>
-        <form class="form-book" method="post" enctype="multipart/form-data">
+        <form class="mx-auto" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% bootstrap_form form layout='horizontal' %}
-            <button class="btn btn-lg btn-secondary" type="submit">Сохранить</button>
+            <p class="lead">
+                <button class="btn btn-lg btn-secondary" type="submit">Сохранить</button>
+            </p>
         </form>
     </p>
 {% endblock %}

@@ -1,49 +1,44 @@
+<!--v2-->
 {% extends "layout/basic.html" %}
 {% load thumbnail %}
 {% load static %}
 {% load bootstrap4 %}
 {% block title %}Профиль{% endblock %}
-{% block head %}<link rel="stylesheet" type="text/css" href="{% static 'main/css/profile.css' %}">{% endblock %}
-{% block header %}
-<header class="masthead">
-    <div class="inner">
-        <h3 class="masthead-brand">Bookshelf</h3>
-        <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
-            <a class="nav-link active" href="{% url 'main:profile' %}">Профиль</a>
-            <a class="nav-link" href="{% url 'main:logout' %}">Выход</a>
-        </nav>
-    </div>
-</header>
+{% block nav_items %}
+<li class="nav-item">
+    <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
+</li>
+<li class="nav-item active">
+    <a class="nav-link" href="{% url 'main:profile' %}">Профиль</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{% url 'main:logout' %}">Выход</a>
+</li>
 {% endblock %}
+{% block main_class %}mt-2{% endblock %}
 {% block main %}
-    <div class="container flex-wrap border-bottom">
-        <div class="row">
-            <div class="col-auto pl-0 pr-0 userpic-cell">
-                {% if user.userpic %}
-                    <img src="{% thumbnail user.userpic 'default' %}">
-                {% else %}
-                    {% if not user.sex %}
-                        <img src="{% static 'main/girl_with_glasses.svg' %}">
-                    {% else %}
-                        <img src="{% static 'main/boy_with_mustages.svg' %}">
-                    {% endif %}
-                {% endif %}
-            </div>
-            <div class="col-auto text-left" >
-                <p>&commat;{{ user.username }}</p>
-                <h2>{{ fullname }}</h2>
-            </div>
-        </div>
-
-        <div class="row w-100">
-            <div class="col-auto pl-0 pr-0 w-100">
-                <nav class="nav justify-content-center w-100">
-                    <a class="nav-link" href="{% url 'main:profile_change' %}">Редактировать</a>
-                    <a class="nav-link" href="{% url 'main:password_change' %}">Сменить пароль</a>
-                    <a class="nav-link" href="{% url 'main:delete_user' %}">Удалить аккаунт</a>
-                </nav>
-            </div>
-        </div>
+<div class="profile-top d-flex">
+    <div class=" pr-2">
+        {% if user.userpic %}
+            <img class="userpic" src="{% thumbnail user.userpic 'default' %}">
+        {% else %}
+            {% if not user.sex %}
+                <img class="userpic" src="{% static 'main/girl_with_glasses.svg' %}">
+            {% else %}
+                <img class="userpic" src="{% static 'main/boy_with_mustages.svg' %}">
+            {% endif %}
+        {% endif %}
     </div>
+    <div class=" text-left">
+        <p class="mb-1">&commat;{{ user.username }}</p>
+        <h2>{{ fullname }}</h2>
+    </div>
+</div>
+<div class="border-bottom ">
+    <nav class="nav justify-content-center w-100">
+        <a class="nav-link" href="{% url 'main:profile_change' %}">Редактировать</a>
+        <a class="nav-link" href="{% url 'main:password_change' %}">Сменить пароль</a>
+        <a class="nav-link" href="{% url 'main:delete_user' %}">Удалить аккаунт</a>
+    </nav>
+</div>
 {% endblock %}

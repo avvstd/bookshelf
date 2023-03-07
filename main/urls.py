@@ -20,5 +20,5 @@ urlpatterns = [
     path('register/done/', register_done, name='register_done'),
     path('register/', RegisterUser.as_view(), name='register'),
     path('ping/', ping, name='ping'),
-    path('', index, name='index'),
+    path('', index, name='index')
 ]

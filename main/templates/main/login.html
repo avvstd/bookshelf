@@ -1,25 +1,33 @@
+<!--v2-->
 {% extends "layout/basic.html" %}
 {% load static %}
 {% block title %}Вход{% endblock %}
-{% block head %}<link rel="stylesheet" type="text/css" href="{% static 'main/css/login.css' %}">{% endblock %}
-{% block header %}
-<header class="masthead mb-auto">
-    <div class="inner">
-        <h3 class="masthead-brand">Bookshelf</h3>
-        <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
-            <a class="nav-link active" href="{% url 'main:login' %}">Вход</a>
-            <a class="nav-link" href="{% url 'main:register' %}">Регистрация</a>
-        </nav>
-    </div>
-</header>
+{% block nav_items %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:profile' %}">Профиль</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:logout' %}">Выход</a>
+    </li>
+    {% else %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'main:login' %}">Вход</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:register' %}">Регистрация</a>
+    </li>
+    {% endif %}
 {% endblock %}
+{% block main_class %}mt-auto mb-auto{% endblock %}
 {% block main %}
-
     {% if user.is_authenticated %}
     <h1 class="h5 mb-3 font-weight-normal">Вы уже авторизованы.</h1>
     {% else %}
-    <form class="form-login" method="post">
+    <form class="form-login mx-auto px-2" method="post">
         {% csrf_token %}
         <img class="mb-4" src="{% static 'main/bookshelf.svg' %}" alt="" width="72" height="72">
         <h1 class="h5 mb-3 font-weight-normal">Войдите на сайт, чтобы редактировать свои полки.</h1>
@@ -28,9 +36,7 @@
             <p class="errors">{{ error }}</p>
             {% endfor %}
         {% endif %}
-
-        {% for field in form %}           
-
+        {% for field in form %}
             {% if field.name == 'remember_me' %}
                 <div class="checkbox mb-1 mt-1">
                     <label>
@@ -42,14 +48,13 @@
                 {{ field }}
                 {{ field.errors }}
             {% endif %}
-
         {% endfor %}
-        <button class="btn btn-lg btn-secondary btn-block" type="submit">Войти</button>
-        <div class="mt-2">
+        <p class="lead mb-2">
+            <button class="btn btn-lg btn-secondary btn-block" type="submit">Войти</button>
+        </p>
+        <div class="mt-1">
             <a href="{% url 'main:password_reset' %}">Забыли пароль?</a>
         </div>
     </form>
-
     {% endif %}
-
 {% endblock %}

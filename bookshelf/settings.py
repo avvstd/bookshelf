@@ -151,8 +151,6 @@ LOGGING = {
     }
 }
 
-#LOGIN_REDIRECT_URL = '/'
-
 SESSION_COOKIE_AGE = 60 * 60 * 24
 
 LOGIN_URL = 'main:login'

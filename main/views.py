@@ -52,14 +52,25 @@ class RegisterUser(CreateView):
     success_url = reverse_lazy('main:register_done')
 
 def register_done(request):
-    return render(request, 'main/register_done.html')
+    context = {
+            'title': 'Активация',
+            'message': 'Для окончания регистрации пользователя перейдите по ссылке,'
+                + ' в письме, высланном на Вашу электронную почту.'
+        }
+    return render(request, 'layout/simple.html', context)
 
 def user_activate(request, sign):
+
+    template_name = 'layout/simple.html'
 
     try:
         username = signer.unsign(sign)
     except BadSignature:
-        return render(request, 'main/wrong_activation.html')
+        context = {
+            'title': 'Ошибка активации',
+            'message': 'Активация пользователя прошла неудачно.'
+        }
+        return render(request, template_name, context)
 
     user = get_object_or_404(BookUser, username=username)
 
@@ -68,11 +79,20 @@ def user_activate(request, sign):
         user.is_activated = True
         user.save()
         
-    return render(request, 'main/user_active.html')
+    context = {
+        'title': 'Активация',
+        'message': 'Пользователь активирован.'
+    }
+
+    return render(request, template_name, context)
 
 def ping(request):
     logger.warning(get_activation_host())
-    return render(request, 'main/ping.html')
+    context = {
+            'title': 'Pong',
+            'message': 'Pong.'
+        }
+    return render(request, 'layout/simple.html', context)
 
 @login_required
 def profile(request):
@@ -139,10 +159,15 @@ class UserPasswordResetView(PasswordResetView):
     subject_template_name = 'email/password_reset_subject.txt'
     email_template_name = 'email/password_reset_body.txt'
     success_url = reverse_lazy('main:password_reset_done')
+    extra_context = {'label': 'Укажите адрес электронной почты для сброса пароля.', }
 
 class UserPasswordResetDoneView(PasswordResetDoneView):
 
-    template_name = 'main/password_reset_done.html'
+    template_name = 'layout/simple.html'
+    extra_context = {
+        'title': 'Изменение пароля',
+        'message': 'На электронную почту отправлена ссылка для изменения пароля.'
+    }
 
 class UserPasswordResetConfirmView(PasswordResetConfirmView):
 
