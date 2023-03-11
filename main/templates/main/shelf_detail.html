@@ -2,7 +2,7 @@
 {% extends "layout/basic.html" %}
 {% load static %}
 {% load bootstrap4 %}
-{% block title %}Сброс пароля{% endblock %}
+{% block title %}Книжная полка{% endblock %}
 {% block nav_items %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
@@ -21,16 +21,20 @@
     <li class="nav-item">
         <a class="nav-link" href="{% url 'main:register' %}">Регистрация</a>
     </li>
-    {% endif %}
+{% endif %}
 {% endblock %}
-{% block main_class %}mt-auto mb-auto{% endblock %}
 {% block main %}
-    <form class="form-main mx-auto" method="post">
-        {% csrf_token %}
-        <p class="lead">{{ label }}</p>
-        {% bootstrap_form form show_label=False %}
-        <p class="lead">
-            <button class="btn btn-lg btn-secondary mt-2" type="submit">Отправить</button>
-        </p>
-    </form>
+    <h2>{{ name }}</h2>
+    {% if is_owner %}
+        <div class="border-bottom border-top">
+            <nav class="nav">
+                <a class="nav-link" href="{% url 'main:record_add' pk=pk %}">Добавить запись</a>
+                <a class="nav-link" href="{% url 'main:password_change' %}">Сменить пароль</a>
+                <a class="nav-link" href="{% url 'main:delete_user' %}">Удалить аккаунт</a>
+            </nav>
+        </div>
+    {% endif %}
+    {% for record in shelfrecords %}
+        <p>{{ record.title }}</p>
+    {% endfor %}
 {% endblock %}

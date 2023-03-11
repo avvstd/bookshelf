@@ -1,9 +1,12 @@
+import datetime
 from django import forms
-from django.core import validators
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 from .apps import user_registered
-from .models import BookUser
+from .models import BookUser, Shelf, ShelfRecord
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 class UserLoginForm(AuthenticationForm):
 
@@ -72,3 +75,28 @@ class ChangeUserInfoForm(forms.ModelForm):
     class Meta:
         model = BookUser
         fields = ('username', 'email', 'first_name', 'last_name', 'sex', 'userpic')
+
+class ShelfForm(forms.ModelForm):
+
+    class Meta:
+        model = Shelf
+        fields = '__all__'
+        widgets = {
+            'owner': forms.HiddenInput,
+            'private': forms.widgets.Select(attrs={'size': 1})  #bootstrap compatibility
+        }
+
+class RecorddAddForm(forms.ModelForm):
+
+    class Meta:
+        model = ShelfRecord
+        fields = '__all__'
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Название'}),
+            'author': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Автор'}),
+            'comment': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Комментарий', 'rows': 5}),
+            'rating': forms.widgets.Select(attrs={'size': 1, 'class': 'form-control'}),
+            'read_date': DateInput(attrs={'class': 'form-control', 'placeholder': 'Дата'}),
+            'cover': forms.FileInput(attrs={'class': 'form-control'}),
+            'shelf': forms.HiddenInput,
+        }

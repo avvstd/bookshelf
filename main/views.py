@@ -1,4 +1,4 @@
-import logging
+import logging, datetime
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -12,11 +12,12 @@ from django.views.generic import CreateView, UpdateView
 from django.views.generic.edit import DeleteView
 from django.views.generic.base import ContextMixin
 from django.core.signing import BadSignature
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
 
-from .forms import UserLoginForm, UserRegistrationForm, ChangeUserInfoForm
+from .forms import UserLoginForm, UserRegistrationForm, ChangeUserInfoForm, ShelfForm, RecorddAddForm
 from .utilities import signer, get_activation_host
-from .models import BookUser
+from .models import BookUser, Shelf, ShelfRecord
 
 logger = logging.getLogger(__name__)
 
@@ -97,9 +98,12 @@ def ping(request):
 @login_required
 def profile(request):
 
+    shelfs = Shelf.objects.filter(owner=request.user.pk)
+
     context = {
         'user': request.user,
         'fullname': request.user.get_full_name(),
+        'shelfs': shelfs
     }
 
     return render(request, 'main/profile.html', context)
@@ -174,3 +178,65 @@ class UserPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = 'main/password_reset.html'
     post_reset_login = True
     success_url = reverse_lazy('main:profile')
+
+@login_required
+def shelf_add(request):
+
+    if request.method == 'POST':
+        form = ShelfForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('main:profile')
+    else:
+        form = ShelfForm(initial={'owner': request.user.pk})
+
+    context = {'form': form}
+
+    return render(request, 'main/shelf_add.html', context)
+
+def shelf_detail(request, pk):
+
+    shelf = get_object_or_404(Shelf, pk=pk)
+    user = request.user
+    is_owner = (shelf.owner == user)
+    access_denied = (shelf.private and not is_owner)
+    
+    if access_denied:
+        context = {
+            'title': 'Книжная полка',
+            'message': 'У Вас нет доступа к этой полке.'
+        }
+        return render(request, 'layout/simple.html', context)
+    else:
+        records = ShelfRecord.objects.filter(shelf=shelf.pk)
+        context = {
+            'name': shelf.name,
+            'shelfrecords': records,
+            'is_owner': is_owner,
+            'pk': pk
+        }
+        return render(request, 'main/shelf_detail.html', context)
+    
+@login_required
+def record_add(request, pk):
+    shelf = get_object_or_404(Shelf, pk=pk)
+    user = request.user
+    is_owner = (shelf.owner == user)
+
+    if not is_owner:
+        raise PermissionDenied()
+    
+    if request.method == 'POST':
+        form = RecorddAddForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'Запись добавлена')
+            return redirect('main:shelf_detail', pk=pk)                
+    else:
+        form = RecorddAddForm(initial={
+                                'shelf': pk, 
+                                'read_date': datetime.date.today().isoformat()
+                            })
+        
+    context = {'form': form, 'name': shelf.name, 'pk': pk}
+    return render(request, 'main/shelf_record_add.html', context)

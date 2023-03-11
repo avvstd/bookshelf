@@ -34,4 +34,11 @@ def send_activation_notification(user):
     user.email_user(subject, body)
 
 def get_upload_path(instance, filename):
+    # Migration problem.
+    return get_userpics_upload_path(instance, filename)
+
+def get_userpics_upload_path(instance, filename):
     return 'userpics/%s%s' % (datetime.now().timestamp(), splitext(filename)[1])
+
+def get_covers_upload_path(instance, filename):
+    return 'covers/%s%s' % (datetime.now().timestamp(), splitext(filename)[1])

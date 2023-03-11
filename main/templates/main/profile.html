@@ -34,11 +34,28 @@
         <h2>{{ fullname }}</h2>
     </div>
 </div>
-<div class="border-bottom ">
+<div class="border-bottom">
     <nav class="nav justify-content-center w-100">
         <a class="nav-link" href="{% url 'main:profile_change' %}">Редактировать</a>
         <a class="nav-link" href="{% url 'main:password_change' %}">Сменить пароль</a>
         <a class="nav-link" href="{% url 'main:delete_user' %}">Удалить аккаунт</a>
     </nav>
+</div>
+<div class="text-left mt-1">
+    <h3 class="mb-0">Ваши полки:</h3>
+    <p><a href="{% url 'main:shelf_add' %}">+Добавить</a></p>
+    {% if shelfs %}
+        {% for shelf in shelfs %}
+            <p class="font-bold"><a href="{% url 'main:shelf_detail' shelf.pk %}">{{ shelf.name }}</a>
+                {% if shelf.private %}
+                (<span class="font-italic">частная</span>)
+                {% else %}
+                (<span class="font-italic">открытая</span>)
+                {% endif %}
+                </p>
+        {% endfor %}
+    {% else %}
+        <p>У Вас не создано ни одной полки.</p>
+    {% endif %}
 </div>
 {% endblock %}
