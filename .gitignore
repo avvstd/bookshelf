@@ -5,6 +5,7 @@ migrations/
 bookshelf.data
 local_set/
 temp/
+temp.*
 media/
 db.sqlite3
 .env

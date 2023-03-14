@@ -1,0 +1,26 @@
+<!--v2-->
+{% extends "layout/basic.html" %}
+{% load static %}
+{% load bootstrap4 %}
+{% block title %}{{ title }}{% endblock %}
+{% block nav_items %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:profile' %}">Профиль</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:logout' %}">Выход</a>
+    </li>
+{% endblock %}
+{% block main_class %}mt-auto mb-auto{% endblock %}
+{% block main %}
+    <form class="form-main mx-auto" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form show_label=False %}
+        <p class="lead">
+            <button class="btn btn-lg btn-secondary" type="submit">Сохранить</button>
+        </p>
+    </form>
+{% endblock %}

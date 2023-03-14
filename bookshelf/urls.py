@@ -28,3 +28,7 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns.append(path('static/<path:path>', never_cache(serve)))
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = "main.views.page_not_found_view"
+handler403 = 'main.views.forbidden_view'
+handler500 = 'main.views.server_error_view'

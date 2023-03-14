@@ -35,6 +35,7 @@ INSTALLED_APPS = [
 
     #local
     'main.apps.MainConfig',
+    'main.templatetags.main_extras',
 ]
 
 MIDDLEWARE = [
@@ -165,6 +166,14 @@ THUMBNAIL_ALIASES = {
     '': {
         'default': {
             'size': (125, 0),
+            'crop': 'scale',
+        },
+        'cover_inline': {
+            'size': (50, 0),
+            'crop': 'scale',
+        },
+        'cover': {
+            'size': (100, 0),
             'crop': 'scale',
         }
     }

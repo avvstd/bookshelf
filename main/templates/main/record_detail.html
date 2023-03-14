@@ -1,0 +1,61 @@
+<!--v2-->
+{% extends "layout/basic.html" %}
+{% load main_extras %}
+{% load thumbnail %}
+{% load static %}
+{% load bootstrap4 %}
+{% block title %}Добавление записи{% endblock %}
+{% block nav_items %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:profile' %}">Профиль</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:logout' %}">Выход</a>
+    </li>
+{% endblock %}
+{% block main %}
+    <div class="inner">
+        <div class="row text-left">
+            <div class="col-12">
+                <h4><a href="{% url 'main:shelf_detail' pk=pk_shelf %}">{{ name }}/</a></h4>
+            </div>
+        </div>
+        <div class="row mb-2 text-left">
+            <div class="col-12">
+                <a class="mr-1" href="{% url 'main:record_change' pk=pk %}">~Редактировать</a>
+                <a href="{% url 'main:record_delete' pk=pk %}">-Удалить</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                {% if cover %}
+                <img class="book-cover" src="{% thumbnail cover 'cover' %}">
+                {% else %}
+                <img class="book-cover" src="{% static 'main/book_'|addstr:random_cover|addstr:'.svg' %}">
+                {% endif %}
+            </div>
+            <div class="col-9">
+                <h2>{{ title }}</h2>
+                <h4>{{ author }}</h4>
+                <p>
+                    {% if rating == 1 %}
+                    &#x2B50;
+                    {% elif rating == 2 %}
+                    &#x2B50;&#x2B50;
+                    {% elif rating == 3 %}
+                    &#x2B50;&#x2B50;&#x2B50;
+                    {% elif rating == 4 %}
+                    &#x2B50;&#x2B50;&#x2B50;&#x2B50;
+                    {% elif rating == 5 %}
+                    &#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;
+                    {% endif %}
+                </p>
+                <p>{{ read_date|date:"d.m.Y" }}</p>
+                <p>{{ comment }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

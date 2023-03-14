@@ -14,12 +14,16 @@ from django.views.generic.base import ContextMixin
 from django.core.signing import BadSignature
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
+from random import randint
 
 from .forms import UserLoginForm, UserRegistrationForm, ChangeUserInfoForm, ShelfForm, RecorddAddForm
-from .utilities import signer, get_activation_host
+from .forms import UploadFileForm
+from .utilities import signer, handle_shelf_file
 from .models import BookUser, Shelf, ShelfRecord
+from bookshelf.settings import DEBUG
 
-logger = logging.getLogger(__name__)
+if DEBUG:
+    logger = logging.getLogger(__name__)
 
 def index(request):
     ''' Main page. '''
@@ -88,7 +92,7 @@ def user_activate(request, sign):
     return render(request, template_name, context)
 
 def ping(request):
-    logger.warning(get_activation_host())
+    
     context = {
             'title': 'Pong',
             'message': 'Pong.'
@@ -190,9 +194,9 @@ def shelf_add(request):
     else:
         form = ShelfForm(initial={'owner': request.user.pk})
 
-    context = {'form': form}
+    context = {'form': form, 'title': 'Добавление полки'}
 
-    return render(request, 'main/shelf_add.html', context)
+    return render(request, 'main/shelf_change.html', context)
 
 def shelf_detail(request, pk):
 
@@ -226,6 +230,8 @@ def record_add(request, pk):
     if not is_owner:
         raise PermissionDenied()
     
+    book_cover_random_postfix = randint(1, 6)
+
     if request.method == 'POST':
         form = RecorddAddForm(request.POST, request.FILES)
         if form.is_valid():
@@ -235,8 +241,153 @@ def record_add(request, pk):
     else:
         form = RecorddAddForm(initial={
                                 'shelf': pk, 
-                                'read_date': datetime.date.today().isoformat()
+                                'read_date': datetime.date.today().isoformat(),
+                                'random_cover': book_cover_random_postfix
                             })
         
-    context = {'form': form, 'name': shelf.name, 'pk': pk}
-    return render(request, 'main/shelf_record_add.html', context)
+    context = {
+        'form': form, 
+        'name': shelf.name, 
+        'pk': pk, 
+        'cover': 'main/book_%d.svg' % book_cover_random_postfix,
+        'title': 'Добавление записи'
+        }
+    return render(request, 'main/record_change.html', context)
+
+@login_required
+def shelf_change(request, pk):
+    shelf = get_object_or_404(Shelf, pk=pk)
+
+    if shelf.owner != request.user:
+        raise PermissionDenied()
+
+    if request.method == 'POST':
+        form = ShelfForm(request.POST, instance=shelf)
+        if form.is_valid():
+            form.save()
+            return redirect('main:shelf_detail', pk=pk)
+    else:
+        form = ShelfForm(instance=shelf)
+
+    context = {'form': form, 'title': 'Редактирование полки'}
+
+    return render(request, 'main/shelf_change.html', context)
+
+@login_required
+def shelf_delete(request, pk):
+    shelf = get_object_or_404(Shelf, pk=pk)
+    if shelf.owner != request.user:
+        raise PermissionDenied()
+    
+    if request.method == 'POST':
+        shelf.delete()
+        messages.add_message(request, messages.SUCCESS, 'Полка удалена')
+        return redirect('main:profile')
+    else:
+        context = {'name': shelf.name}
+        return render(request, 'main/delete_shelf.html', context)
+
+@login_required
+def record_detail(request, pk):
+    record = get_object_or_404(ShelfRecord, pk=pk)
+    if record.shelf.owner != request.user:
+        raise PermissionDenied()
+
+    context = {
+        'cover': record.cover,
+        'title': record.title,
+        'random_cover': record.random_cover,
+        'pk_shelf': record.shelf.pk,
+        'name': record.shelf.name,
+        'author': record.author,
+        'rating': record.rating,
+        'read_date': record.read_date,
+        'comment': record.comment,
+        'pk': record.pk,
+        }
+    return render(request, 'main/record_detail.html', context)
+
+@login_required
+def record_change(request, pk):
+    record = get_object_or_404(ShelfRecord, pk=pk)
+
+    if record.shelf.owner != request.user:
+        raise PermissionDenied()
+
+    if request.method == 'POST':
+        form = RecorddAddForm(request.POST, instance=record)
+        if form.is_valid():
+            form.save()
+            return redirect('main:shelf_detail', pk=record.shelf.pk)
+    else:
+        form = RecorddAddForm(instance=record)
+
+    context = {
+        'form': form, 
+        'name': record.shelf.name, 
+        'pk': record.shelf.pk, 
+        'cover': record.cover,
+        'random_cover': record.random_cover,
+        'rating': record.rating,
+        'title': 'Редактирование записи'
+        }
+
+    return render(request, 'main/record_change.html', context)
+
+@login_required
+def record_delete(request, pk):
+    record = get_object_or_404(ShelfRecord, pk=pk)
+    if record.shelf.owner != request.user:
+        raise PermissionDenied()
+    
+    if request.method == 'POST':
+        record.delete()
+        messages.add_message(request, messages.SUCCESS, 'Запись удалена')
+        return redirect('main:shelf_detail', pk=record.shelf.pk)
+    else:
+        context = {'title': record.title}
+        return render(request, 'main/delete_record.html', context)
+
+def page_not_found_view(request, exception):
+    context = {'status': '404', 'status_message': 'Страница не найдена'}
+    return render(request, 'main/bad_code.html', context)
+
+def forbidden_view(request, exception):
+    context = {'status': '403', 'status_message': 'Доступ запрещен'}
+    return render(request, 'main/bad_code.html', context)
+
+def server_error_view(request):
+    context = {'status': '500', 'status_message': 'Внутренняя ошибка'}
+    return render(request, 'main/bad_code.html', context)
+
+@login_required
+def shelf_upload(request, pk):
+    shelf = get_object_or_404(Shelf, pk=pk)
+    if shelf.owner != request.user:
+        raise PermissionDenied()
+    
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = handle_shelf_file(request.FILES['file'])
+            create_records(data, shelf)
+            return redirect('main:shelf_detail', pk=pk)
+    else:
+        form = UploadFileForm()
+
+    return render(request, 'main/shelf_upload.html', {'form': form})
+
+def create_records(data, shelf):
+
+    for element in data:
+
+        record = ShelfRecord()
+        record.title = element['title']
+        record.author = element['author']
+        record.rating = element['rating']
+        record.read_date = element['read_date']
+        record.shelf = shelf
+        record.random_cover = randint(1, 6)
+        record.save()
+
+    return 0

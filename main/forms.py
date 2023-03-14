@@ -66,15 +66,17 @@ class UserRegistrationForm(UserCreationForm):
     
 class ChangeUserInfoForm(forms.ModelForm):
 
-    email = forms.EmailField(
-        label ='Электронная почта',
-        widget = forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Электронная почта'}),
-        required = True
-    )
-
     class Meta:
         model = BookUser
         fields = ('username', 'email', 'first_name', 'last_name', 'sex', 'userpic')
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя пользователя'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Электронная почта'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Фамилия'}),
+            'sex': forms.widgets.Select(attrs={'size': 1, 'class': 'form-control'}),
+            'userpic': forms.FileInput(attrs={'class': 'form-control'})
+        }
 
 class ShelfForm(forms.ModelForm):
 
@@ -94,9 +96,16 @@ class RecorddAddForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Название'}),
             'author': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Автор'}),
-            'comment': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Комментарий', 'rows': 5}),
+            'comment': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Комментарий', 'rows': 4}),
             'rating': forms.widgets.Select(attrs={'size': 1, 'class': 'form-control'}),
-            'read_date': DateInput(attrs={'class': 'form-control', 'placeholder': 'Дата'}),
+            'read_date': DateInput(attrs={'class': 'form-control', 'placeholder': 'Дата'}, format='%Y-%m-%d'),
             'cover': forms.FileInput(attrs={'class': 'form-control'}),
             'shelf': forms.HiddenInput,
+            'random_cover': forms.HiddenInput,
         }
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField(
+        label='Файл с книгами',
+        widget=forms.FileInput(attrs={'class': 'form-control', 'accept': 'text'})
+    )

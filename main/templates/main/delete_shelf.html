@@ -2,7 +2,7 @@
 {% extends "layout/basic.html" %}
 {% load static %}
 {% load bootstrap4 %}
-{% block title %}Добавление полки{% endblock %}
+{% block title %}Удаление полки{% endblock %}
 {% block nav_items %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
@@ -16,11 +16,11 @@
 {% endblock %}
 {% block main_class %}mt-auto mb-auto{% endblock %}
 {% block main %}
-    <form class="form-main mx-auto" method="post">
+    <p class="lead">Удаление полки {{ name }}.</p>
+    <form method="post">
         {% csrf_token %}
-        {% bootstrap_form form show_label=False %}
         <p class="lead">
-            <button class="btn btn-lg btn-secondary" type="submit">Сохранить</button>
+        {% bootstrap_button "Удалить" button_type="submit" button_class="btn btn-lg btn-secondary mt-2" %}
         </p>
     </form>
 {% endblock %}

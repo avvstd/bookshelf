@@ -1,0 +1,26 @@
+<!--v2-->
+{% extends "layout/basic.html" %}
+{% load static %}
+{% load bootstrap4 %}
+{% block title %}Удаление записи{% endblock %}
+{% block nav_items %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:profile' %}">Профиль</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:logout' %}">Выход</a>
+    </li>
+{% endblock %}
+{% block main_class %}mt-auto mb-auto{% endblock %}
+{% block main %}
+    <p class="lead">Удаление записи {{ title }}.</p>
+    <form method="post">
+        {% csrf_token %}
+        <p class="lead">
+        {% bootstrap_button "Удалить" button_type="submit" button_class="btn btn-lg btn-secondary mt-2" %}
+        </p>
+    </form>
+{% endblock %}

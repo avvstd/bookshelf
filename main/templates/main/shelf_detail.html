@@ -1,6 +1,8 @@
 <!--v2-->
 {% extends "layout/basic.html" %}
+{% load main_extras %}
 {% load static %}
+{% load thumbnail %}
 {% load bootstrap4 %}
 {% block title %}Книжная полка{% endblock %}
 {% block nav_items %}
@@ -27,14 +29,61 @@
     <h2>{{ name }}</h2>
     {% if is_owner %}
         <div class="border-bottom border-top">
-            <nav class="nav">
+            <nav class="nav justify-content-center">
                 <a class="nav-link" href="{% url 'main:record_add' pk=pk %}">Добавить запись</a>
-                <a class="nav-link" href="{% url 'main:password_change' %}">Сменить пароль</a>
-                <a class="nav-link" href="{% url 'main:delete_user' %}">Удалить аккаунт</a>
+                <a class="nav-link" href="{% url 'main:shelf_change' pk=pk %}">Редактировать полку</a>
+                <a class="nav-link" href="{% url 'main:shelf_upload' pk=pk %}">Загрузить</a>
+                <a class="nav-link" href="{% url 'main:shelf_delete' pk=pk %}">Удалить полку</a>
             </nav>
         </div>
     {% endif %}
-    {% for record in shelfrecords %}
-        <p>{{ record.title }}</p>
-    {% endfor %}
+    {% if shelfrecords %}
+        <div class="table-responsive mt-2">
+            <table class="table table-striped table-sm text-left">
+                <tbody>
+                {% for record in shelfrecords %}
+                <tr>
+                    <td class="justify-content-start">
+                        {% if record.cover %}
+                        <img class="book-cover-inline" src="{% thumbnail record.cover 'cover_inline' %}">
+                        {% else %}
+                        <img class="book-cover-inline" src="{% static 'main/book_'|addstr:record.random_cover|addstr:'.svg' %}">
+                        {% endif %}
+                    </td>
+                    <td>
+                        <p class="mb-0">
+                            <strong>
+                                {% if is_owner %}
+                                <a href="{% url 'main:record_detail' pk=record.pk %}">
+                                {% endif %}
+                                    {{ record.title }}
+                                {% if is_owner %}
+                                </a>
+                                {% endif %}
+                            </strong>
+                        </p>
+                        <p class="mb-0">{{ record.author }}</p>
+                    </td>
+                    <td>
+                        <p class="mb-0">
+                            {% if record.rating == 1 %}
+                            &#x2B50;
+                            {% elif record.rating == 2 %}
+                            &#x2B50;&#x2B50;
+                            {% elif record.rating == 3 %}
+                            &#x2B50;&#x2B50;&#x2B50;
+                            {% elif record.rating == 4 %}
+                            &#x2B50;&#x2B50;&#x2B50;&#x2B50;
+                            {% elif record.rating == 5 %}
+                            &#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;
+                            {% endif %}
+                        </p>
+                        <p class="mb-0">{{ record.read_date|date:"d.m.Y" }}</p>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
 {% endblock %}

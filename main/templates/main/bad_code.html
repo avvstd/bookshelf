@@ -1,0 +1,20 @@
+{% load bootstrap4 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Book shelf">
+        <link rel="shortcut icon" type="image/png" href="{% static 'main/favicon.ico' %}">
+        <title>404 - BookShelf</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'main/bootstrap.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'main/bad_codes.css' %}">
+    </head>
+    <body>
+        <p class="bad-code"><strong>{{ status }}</strong></p>
+        <h1 class="mt-0 mb-3">{{ status_message }}</h1>
+        <h5><a href="{% url 'main:index' %}">Перейти на главную</a></h5>
+        <div class="circle"></div>
+    </body>
+</html>

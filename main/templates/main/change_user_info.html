@@ -17,11 +17,43 @@
 {% endblock %}
 {% block main_class %}mt-auto mb-auto{% endblock %}
 {% block main %}
+    <p class="mb-0">
+        {% if user.userpic %}
+            <img class="userpic" src="{% thumbnail user.userpic 'default' %}">
+        {% else %}
+            {% if not user.sex %}
+                <img class="userpic" src="{% static 'main/girl_with_glasses.svg' %}">
+            {% else %}
+                <img class="userpic" src="{% static 'main/boy_with_mustages.svg' %}">
+            {% endif %}
+        {% endif %}
+    </p>
     <h3>&commat;{{ user.username }}</h3>
     <p>
         <form class="mx-auto" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {% bootstrap_form form layout='horizontal' %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                <p class="errors">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+            
+            {% for field in form %}
+                
+                {% if field.is_hidden %}
+                    {{ field }}
+                {% else %}
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label text-left" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="col-md-8">
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+
             <p class="lead">
                 <button class="btn btn-lg btn-secondary" type="submit">Сохранить</button>
             </p>

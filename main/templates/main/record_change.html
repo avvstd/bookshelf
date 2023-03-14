@@ -1,0 +1,85 @@
+<!--v2-->
+{% extends "layout/basic.html" %}
+{% load main_extras %}
+{% load thumbnail %}
+{% load static %}
+{% load bootstrap4 %}
+{% block title %}Добавление записи{% endblock %}
+{% block nav_items %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:index' %}">Главная</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:profile' %}">Профиль</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:logout' %}">Выход</a>
+    </li>
+{% endblock %}
+{% block main_class %}mt-auto mb-auto{% endblock %}
+{% block main %}
+    <div class="inner">
+        <div class="row">
+            <div class="col">
+                <h4 class="text-left"><a href="{% url 'main:shelf_detail' pk=pk %}">{{ name }}/</a></h4>
+            </div>
+            <div class="col d-flex justify-content-end">
+                {% if cover %}
+                <img class="book-cover" src="{% thumbnail cover 'cover' %}">
+                {% else %}
+                <img class="book-cover" src="{% static 'main/book_'|addstr:random_cover|addstr:'.svg' %}">
+                {% endif %}
+            </div>
+        </div>
+        <p>
+            <form class="mx-auto" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                    <p class="errors">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+                
+                {% for field in form %}
+                    
+                    {% if field.is_hidden %}
+                        {{ field }}
+                    {% else %}
+
+                        {% if field.name == 'rating' %}
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label text-left" for="id_rating">Оценка</label>
+                                <div class="col-md-9">
+                                    <select name="rating" size="1" class="form-control" title="" id="id_rating">
+                                        <option value="0" {% if 0 == rating %}selected{% endif %}></option>
+                                        <option value="1" {% if 1 == rating %}selected{% endif %}>&#x2B50;</option>
+                                        <option value="2" {% if 2 == rating %}selected{% endif %}>&#x2B50;&#x2B50;</option>
+                                        <option value="3" {% if 3 == rating %}selected{% endif %}>&#x2B50;&#x2B50;&#x2B50;</option>
+                                        <option value="4" {% if 4 == rating %}selected{% endif %}>&#x2B50;&#x2B50;&#x2B50;&#x2B50;</option>
+                                        <option value="5" {% if 5 == rating %}selected{% endif %}>&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</option>
+                                    </select>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label text-left" for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                <div class="col-md-9">
+                                    {{ field }}
+                                    {{ field.errors }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endfor %}
+
+                <p class="lead">
+                    <button class="btn btn-lg btn-secondary" type="submit">Сохранить</button>
+                </p>
+            </form>
+        </p>
+    </div>
+{% endblock %}

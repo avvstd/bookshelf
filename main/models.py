@@ -43,6 +43,7 @@ class ShelfRecord(models.Model):
     read_date = models.DateField(db_index=True, verbose_name='Дата')
     cover = models.ImageField(upload_to=get_covers_upload_path, null=True, blank=True, verbose_name='Обложка')
     shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE, verbose_name='Полка')
+    random_cover = models.SmallIntegerField(default=0, verbose_name='Случайная обложка')
     
     class Meta:
         ordering = ['-read_date']
