@@ -85,5 +85,51 @@
                 </tbody>
             </table>
         </div>
+        <div>
+            <nav aria-label="Записи полки">
+                <ul class="pagination justify-content-center">
+
+                    <li class="page-item {% if page.number == 1 %}disabled{% endif %}">
+                        <a class="page-link" href="?page=1">
+                            Первая
+                        </a>
+                    </li>
+
+                    {% if page.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page.previous_page_number }}">
+                            &laquo;
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
+
+                    {% for i in valid_numbers %}
+                    <li class="page-item {% if page.number == i %}active{% endif %}">
+                        <a class="page-link" href="?page={{ i }}">
+                            {{ i }}{% if page.number == i %}<span class="sr-only">(current){% endif %}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+
+                    {% if page.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page.next_page_number }}">
+                            &raquo;
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+
+                    <li class="page-item {% if page.number == num_pages %}disabled{% endif %}">
+                        <a class="page-link" href="?page={{ num_pages }}">
+                            Последняя
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     {% endif %}
 {% endblock %}

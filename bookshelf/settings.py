@@ -32,15 +32,19 @@ INSTALLED_APPS = [
     'bootstrap4',
     'django_cleanup',
     'easy_thumbnails',
+    'rest_framework',
+    'corsheaders',
 
     #local
     'main.apps.MainConfig',
     'main.templatetags.main_extras',
+    'hs.apps.HsConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -173,10 +177,20 @@ THUMBNAIL_ALIASES = {
             'crop': 'scale',
         },
         'cover': {
-            'size': (100, 0),
+            'size': (150, 0),
             'crop': 'scale',
         }
     }
 }
 
 THUMBNAIL_BASEDIR = 'thumbnails'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+    
+}
+
+
+

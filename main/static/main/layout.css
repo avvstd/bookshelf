@@ -117,8 +117,8 @@ form .form-control:focus {
   max-height: 125px;
 }
 .book-cover {
-  max-width: 100px;
-  max-height: 100px;
+  max-width: 150px;
+  max-height: 150px;
 }
 .book-cover-inline {
   max-width: 50px;
@@ -149,4 +149,28 @@ form .form-control:focus {
   border-radius: 0;
   -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.page-item .page-link {
+  color: #fff;
+  background-color: #333;
+  border-color: rgb(211, 211, 211);
+}
+.page-item.active .page-link {
+  color: #fff;
+  background-color: #777;
+  border-color: rgb(211, 211, 211);
+}
+.page-item.disabled .page-link {
+  color: #727272;
+  pointer-events: none;
+  cursor: auto;
+  background-color: #333;
+  border-color: rgb(211, 211, 211);
+}
+.page-item .page-link:hover {
+  background-color: #999;
+}
+.page-item .page-link:focus {
+  z-index: 2;
+  box-shadow: 0 0 0 0.2rem rgba(211, 211, 211, 0.5);
 }

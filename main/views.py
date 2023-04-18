@@ -13,6 +13,7 @@ from django.views.generic.edit import DeleteView
 from django.views.generic.base import ContextMixin
 from django.core.signing import BadSignature
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.urls import reverse_lazy
 from random import randint
 
@@ -213,11 +214,22 @@ def shelf_detail(request, pk):
         return render(request, 'layout/simple.html', context)
     else:
         records = ShelfRecord.objects.filter(shelf=shelf.pk)
+        paginator = Paginator(records, 15)
+        if 'page' in request.GET:
+            page_num = request.GET['page']
+        else:
+            page_num = 1
+
+        page = paginator.get_page(page_num)
+        valid_numbers = get_valid_numbers_of_page(paginator.num_pages, 2, int(page_num))
         context = {
             'name': shelf.name,
-            'shelfrecords': records,
+            'shelfrecords': page.object_list,
             'is_owner': is_owner,
-            'pk': pk
+            'pk': pk,
+            'page': page,
+            'valid_numbers': valid_numbers,
+            'num_pages': paginator.num_pages
         }
         return render(request, 'main/shelf_detail.html', context)
     
@@ -315,7 +327,9 @@ def record_change(request, pk):
         raise PermissionDenied()
 
     if request.method == 'POST':
-        form = RecorddAddForm(request.POST, instance=record)
+        form = RecorddAddForm(request.POST, request.FILES, instance=record)
+        logger.warning(type(request.FILES))
+        logger.warning(request.FILES)
         if form.is_valid():
             form.save()
             return redirect('main:shelf_detail', pk=record.shelf.pk)
@@ -391,3 +405,25 @@ def create_records(data, shelf):
         record.save()
 
     return 0
+    
+def get_valid_numbers_of_page(num_pages, half_portion, number):
+    result = []
+    if num_pages <= 0 or number > num_pages or half_portion <= 0:
+        return result
+    else:
+        max_elements = min(num_pages, 2 * half_portion + 1)
+        result.append(number)
+        stop_it = False
+        for i in range(1, 2 * half_portion + 1):
+            for j in [-1, 1]:
+                current = number + j * i
+                if current > 0 and current <= num_pages:
+                    result.append(current)
+                if len(result) >= max_elements:
+                    stop_it = True
+                    break
+            if stop_it:
+                break
+
+    result.sort()
+    return result
